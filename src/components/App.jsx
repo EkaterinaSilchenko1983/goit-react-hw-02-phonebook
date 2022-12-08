@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
+import { GlobalStyle } from './GlobalStyle';
 import { nanoid } from 'nanoid';
 import { ContactForm } from './ContactForm/ContactForm';
 import { ContactList } from './ContactList/ContactList';
-// import { Filter } from './Filter/Filter';
+import { Filter } from './Filter/Filter';
 
 export class App extends Component {
   state = {
@@ -18,10 +19,30 @@ export class App extends Component {
   };
 
   addContact = (name, number) => {
-    console.log(name, number);
+    // console.log(name, number);
+    const searchName = this.state.contacts.find(
+      contact => contact.name.toLowerCase().trim() === name.toLowerCase()
+    );
+
+    if (searchName) {
+      return alert(`${name} is already in contacts`);
+    }
+
     this.setState(prevState => ({
       contacts: [...prevState.contacts, { id: nanoid(), name, number }],
     }));
+  };
+
+  changeFilter = evt => {
+    this.setState({ filter: evt.target.value });
+  };
+
+  getVizibleContact = () => {
+    const { filter, contacts } = this.state;
+    const normalizedFilter = filter.toLowerCase();
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(normalizedFilter)
+    );
   };
 
   deleteContact = contactId => {
@@ -34,26 +55,27 @@ export class App extends Component {
     return (
       <div
         style={{
-          height: '100vh',
+          // height: '100vh',
           display: 'flex',
+          flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-          fontSize: 40,
+          fontSize: 20,
           color: '#010101',
         }}
       >
-        <div>
-          <h1>Phonebook</h1>
-          <ContactForm onSubmit={this.addContact} />
-          <h2>Contacts</h2>
-          {/* <Filter /> */}
-          {this.state.contacts.length > 0 && (
-            <ContactList
-              contacts={this.state.contacts}
-              onDelete={this.deleteContact}
-            />
-          )}
-        </div>
+        <h1>Phonebook</h1>
+        <ContactForm onSubmit={this.addContact} />
+        <h2>Contacts</h2>
+        <Filter value={this.state.filter} onChange={this.changeFilter} />
+        {this.state.contacts.length > 0 && (
+          <ContactList
+            contacts={this.getVizibleContact()}
+            onDelete={this.deleteContact}
+          />
+        )}
+
+        <GlobalStyle />
       </div>
     );
   }

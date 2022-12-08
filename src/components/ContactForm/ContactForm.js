@@ -1,3 +1,6 @@
+import { PropTypes } from 'prop-types';
+import { InputLabel, InputText, ButtonForm } from './ContactForm.styled';
+
 export const ContactForm = ({ onSubmit }) => {
   const handleSubmit = event => {
     const { name, number } = event.target.elements;
@@ -6,29 +9,27 @@ export const ContactForm = ({ onSubmit }) => {
   };
   return (
     <form onSubmit={handleSubmit}>
-      <label>Name </label>
-      <input
+      <InputLabel>Name </InputLabel>
+      <InputText
         type="text"
         name="name"
         pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
         title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
         required
-        placeholder="Enter name"
-        // value={name}
-        // onChange={handleChange}
       />
-      <label>Number </label>
-      <input
+      <InputLabel>Number </InputLabel>
+      <InputText
         type="tel"
         name="number"
         pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
         title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
         required
-        placeholder="Enter phone number"
-        // value={number}
-        // onChange={handleChange}
       />
-      <button type="submit">Add contact</button>
+      <ButtonForm type="submit">Add contact</ButtonForm>
     </form>
   );
+};
+
+ContactForm.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
 };
